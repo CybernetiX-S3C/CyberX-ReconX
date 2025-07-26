@@ -1,17 +1,19 @@
 #!/bin/bash
 
-echo "🔧 Installing CyberShell ReconX v3.2 (CYBERX)..."
+echo "🔧 Installing CyberShell ReconX v4.3 (Darkstorm)..." # Updated version and codename
 
 MAIN_SCRIPT="CyberX_Recon.sh"
 TARGET_CMD="/usr/local/bin/cyberx"
 
 # 📦 Required Packages
-deps=(git make dkms macchanger arp-scan iw iproute2 usbutils dialog)
+# Added nmap and tcpdump as they are used in CyberX_Recon.sh
+deps=(git make dkms macchanger arp-scan iw iproute2 usbutils dialog nmap tcpdump)
 
 echo "📥 Checking dependencies..."
 for pkg in "${deps[@]}"; do
     if ! dpkg -s "$pkg" &>/dev/null; then
         echo "📦 Installing missing: $pkg"
+        sudo apt update # Ensure apt cache is updated before installing
         sudo apt install -y "$pkg"
     else
         echo "✅ $pkg already installed"
@@ -32,6 +34,12 @@ sudo chmod +x "$TARGET_CMD"
 # 📂 Create ReconX Directories
 mkdir -p "$HOME/CyberReconX/logs"
 mkdir -p "$HOME/CyberReconX/export"
+
+# Voice prompt for installation completion
+# Determine invoking user for flite command
+USER_CTX="${SUDO_USER:-$USER}"
+su -l "$USER_CTX" -c 'flite -voice rms -t "Cyber X Recon X version four point three, Darkstorm, installation complete."'
+
 
 # ✅ Success Output
 echo ""
